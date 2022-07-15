@@ -11,26 +11,32 @@
 			alt="Profile"
 		/>
 	</DropdownToggle>
-	<ul
-		class="dropdown-menu dropdown-menu-end"
-		style="max-width: 200px;"
-		aria-labelledby="dropdownMenuButton1"
+	<div
+		class="dropdown-menu dropdown-menu-end shadow"
+		style="width: 11rem; border-radius: 0.375rem;"
+		aria-labelledby="Profile Dropdown"
 	>
-		<li>
+		<div>
+			<h6 class="dropdown-header text-wrap">
+				Signed in as <strong>Demetrius Panovitch</strong>
+			</h6>
+		</div>
+		<div><hr class="dropdown-divider" /></div>
+		<div>
 			<a class="dropdown-item" href="/">
 				<i class="bi bi-person-circle me-1" /> Profile
 			</a>
-		</li>
-		<li>
+		</div>
+		<div>
 			<a class="dropdown-item" href="/">
 				<i class="bi bi-gear me-1" /> Settings
 			</a>
-		</li>
-		<li><hr class="dropdown-divider" /></li>
-		<li>
+		</div>
+		<div><hr class="dropdown-divider" /></div>
+		<div>
 			<a class="dropdown-item text-danger" href="/">
 				<i class="bi bi-box-arrow-right me-1" /> Sign out
 			</a>
-		</li>
-	</ul>
+		</div>
+	</div>
 </div>

@@ -21,6 +21,11 @@
 			<div class="d-md-none vr border border-dark" />
 			<a href="/" class="d-md-none navbar-brand text-black">Grad Man</a>
 		</span>
-		<ProfilePictureDropdown />
+		<div class="d-flex align-items-center gap-3">
+			<a class="text-decoration-none text-black mt-1" href="/">
+				<i class="bi bi-bell" style="font-size: 1.5rem;" />
+			</a>
+			<ProfilePictureDropdown />
+		</div>
 	</div>
 </nav>
