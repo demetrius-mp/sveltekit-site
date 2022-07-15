@@ -1,2 +1,4 @@
-export { default as Sidebar } from './Sidebar.svelte';
+import Sidebar from './Sidebar.svelte';
+
 export { default as sidebarStore } from './sidebar.store';
+export default Sidebar;
