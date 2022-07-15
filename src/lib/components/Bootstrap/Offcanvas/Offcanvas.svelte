@@ -9,7 +9,7 @@
 	export let placement: 'start' | 'end' | 'top' | 'bottom' = 'start';
 	export let width = '400px';
 
-	$: responsiveClass = responsive ? `offcanvas-${responsive}` : 'offcanvas';
+	$: responsiveClass = responsive ? `offcanvas offcanvas-${responsive}` : 'offcanvas';
 	$: placementClass = `offcanvas-${placement}`;
 
 	let offcanvas: Offcanvas | null = null;
@@ -50,11 +50,6 @@
 	}
 </script>
 
-<div
-	bind:this={offcanvasEl}
-	style="--bs-offcanvas-width: {width}"
-	class="{responsiveClass} {placementClass}"
-	tabindex="-1"
->
+<div bind:this={offcanvasEl} style:width class="{responsiveClass} {placementClass}" tabindex="-1">
 	<slot />
 </div>
