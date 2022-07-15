@@ -11,11 +11,3 @@
 	cursor: pointer;
 	outline: inherit;
 }
-
-.w-0 {
-	width: 0px;
-}
-
-.w-0\.5 {
-	width: 0.125rem;
-}

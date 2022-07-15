@@ -22,7 +22,7 @@
 			<a href="/" class="d-md-none navbar-brand text-black">Grad Man</a>
 		</span>
 		<div class="d-flex align-items-center gap-3">
-			<a class="text-decoration-none text-black mt-1" href="/">
+			<a class="text-decoration-none text-black mt-1" href="/notifications">
 				<i class="bi bi-bell" style="font-size: 1.5rem;" />
 			</a>
 			<ProfilePictureDropdown />

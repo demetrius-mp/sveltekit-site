@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDate } from '$lib/utils/formatter.utils';
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
+	import { orderBy } from 'lodash-es';
 
 	interface Notification {
 		id: string;
@@ -65,9 +66,15 @@
 			return notification;
 		});
 
+		notifications = orderBy(notifications, ['read', 'date'], ['asc', 'desc']);
+
 		selectedNotifications = [];
 	}
 </script>
+
+<svelte:head>
+	<title>Notifications</title>
+</svelte:head>
 
 <div class="d-sm-flex align-items-start flex-sm-row flex-column">
 	<div class="flex-fill">
@@ -94,11 +101,11 @@
 						class="form-check-input"
 					/>
 				</th>
-				<th scope="col">
+				<th class="min-width-sender-column" scope="col">
 					{#if selectedNotifications.length > 0}
 						<div style="height: auto;" class="d-flex">
 							<button on:click={bulkRead} class="btn btn-sm py-0 btn-outline-primary">
-								Bulk read
+								Mark as read
 							</button>
 						</div>
 					{:else}
@@ -141,9 +148,30 @@
 		</tbody>
 	</table>
 </div>
+<nav class="mb-3" aria-label="Page navigation example">
+	<ul class="pagination justify-content-center justify-content-sm-end">
+		<li class="page-item disabled">
+			<a class="page-link" href="/notifications" aria-label="Previous">
+				<span aria-hidden="true">&laquo;</span>
+			</a>
+		</li>
+		<li class="page-item active">
+			<a class="page-link" href="/notifications">1</a>
+		</li>
+		<li class="page-item">
+			<a class="page-link" href="/notifications" aria-label="Previous">
+				<span aria-hidden="true">&raquo;</span>
+			</a>
+		</li>
+	</ul>
+</nav>
 
 <style>
 	.row-selected {
 		background-color: rgba(0, 0, 0, 0.15);
+	}
+
+	.min-width-sender-column {
+		min-width: 120px;
 	}
 </style>
