@@ -1,3 +1,7 @@
+:root {
+	--sidebar-width: 16rem;
+}
+
 .button-without-styles {
 	background: none;
 	color: inherit;
