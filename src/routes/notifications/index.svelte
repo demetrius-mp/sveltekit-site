@@ -5,6 +5,7 @@
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
 	import type { Notification, QueryManyOptions } from '$lib/repositories/NotificationRepository';
 
+	let loading = true;
 	let query = '';
 	let currentPage = 1;
 	let itemsPerPage = 0;
@@ -42,11 +43,13 @@
 	}
 
 	async function loadNotifications(options: QueryManyOptions) {
+		loading = true;
 		const result = await notificationStore.load(options);
 
 		itemsPerPage = result.itemsPerPage;
 		totalItems = result.totalItems;
 		notifications = result.items;
+		loading = false;
 	}
 
 	$: loadNotifications({
@@ -108,7 +111,8 @@
 				<th scope="col">Date</th>
 			</tr>
 		</thead>
-		<tbody>
+
+		<tbody class:table-is-loading={loading}>
 			{#each notifications as notification (notification.id)}
 				{@const selected = selectedNotifications.includes(notification)}
 				<tr class:row-selected={selected}>
@@ -126,14 +130,14 @@
 							class="form-check-input"
 						/>
 					</td>
-					<td role="button" class="cursor-pointer">
+					<td role="button">
 						{#if !notification.read}
 							<strong>{notification.sender}</strong>
 						{:else}
 							{notification.sender}
 						{/if}
 					</td>
-					<td role="button" class="cursor-pointer">
+					<td role="button">
 						{notification.title}
 					</td>
 					<td>{formatDate(notification.date)}</td>
@@ -150,5 +154,10 @@
 
 	.min-width-sender-column {
 		min-width: 120px;
+	}
+
+	.table-is-loading {
+		cursor: not-allowed;
+		opacity: 0.5;
 	}
 </style>
