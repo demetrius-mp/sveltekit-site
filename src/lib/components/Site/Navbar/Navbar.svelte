@@ -29,7 +29,7 @@
 			<a href="/" class="d-md-none navbar-brand text-black">Grad Man</a>
 		</span>
 		<div class="d-flex align-items-center gap-3">
-			<a class="text-decoration-none text-black mt-1 position-relative" href="/notifications">
+			<a class="text-decoration-none text-black mt-1 position-relative" href="/app/notifications">
 				<i class="bi bi-bell" style="font-size: 1.5rem;" />
 				{#if hasUnreadMessages}
 					<span
