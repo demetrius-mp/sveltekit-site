@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Pagination from '$lib/components/Bootstrap/Pagination/Pagination.svelte';
 	import { formatDate } from '$lib/utils/formatter.utils';
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
 	import { orderBy } from 'lodash-es';
@@ -134,37 +135,26 @@
 							class="form-check-input"
 						/>
 					</td>
-					<td>
+					<td role="button" class="cursor-pointer">
 						{#if !notification.read}
 							<strong>{notification.sender}</strong>
 						{:else}
 							{notification.sender}
 						{/if}
 					</td>
-					<td>{notification.title}</td>
+					<td role="button" class="cursor-pointer">
+						{notification.title}
+					</td>
 					<td>{formatDate(notification.date)}</td>
 				</tr>
 			{/each}
 		</tbody>
 	</table>
 </div>
-<nav class="mb-3" aria-label="Page navigation example">
-	<ul class="pagination justify-content-center justify-content-sm-end">
-		<li class="page-item disabled">
-			<a class="page-link" href="/notifications" aria-label="Previous">
-				<span aria-hidden="true">&laquo;</span>
-			</a>
-		</li>
-		<li class="page-item active">
-			<a class="page-link" href="/notifications">1</a>
-		</li>
-		<li class="page-item">
-			<a class="page-link" href="/notifications" aria-label="Previous">
-				<span aria-hidden="true">&raquo;</span>
-			</a>
-		</li>
-	</ul>
-</nav>
+
+<div class="mb-3 mt-3 mt-sm-0 d-flex justify-content-end">
+	<Pagination itemsPerPage={4} totalItems={4} currentPage={1} />
+</div>
 
 <style>
 	.row-selected {

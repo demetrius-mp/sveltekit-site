@@ -11,3 +11,7 @@
 	cursor: pointer;
 	outline: inherit;
 }
+
+.cursor-pointer {
+	cursor: pointer;
+}
