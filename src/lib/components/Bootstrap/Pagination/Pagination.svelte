@@ -27,11 +27,11 @@
 			</button>
 		</li>
 		<li class="page-item active">
-			<a class="page-link" href="/notifications">1</a>
+			<a class="page-link" href="/notifications">{currentPage}</a>
 		</li>
 		<li class:disabled={disableNext} class="page-item">
 			<button
-				on:click={() => dispatchPageChange(currentPage - 1)}
+				on:click={() => dispatchPageChange(currentPage + 1)}
 				class="page-link"
 				aria-label="Next"
 			>

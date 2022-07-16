@@ -1,48 +1,15 @@
 <script lang="ts">
 	import Pagination from '$lib/components/Bootstrap/Pagination/Pagination.svelte';
+	import notificationStore from '$lib/stores/notifications.store';
 	import { formatDate } from '$lib/utils/formatter.utils';
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
-	import { orderBy } from 'lodash-es';
+	import type { Notification, QueryManyOptions } from '$lib/repositories/NotificationRepository';
 
-	interface Notification {
-		id: string;
-		sender: string;
-		title: string;
-		date: Date;
-		read: boolean;
-	}
-
-	let notifications: Notification[] = [
-		{
-			date: new Date('2022-07-13'),
-			id: '1',
-			sender: 'Teacher Jane Doe',
-			title: 'Lorem ipsum, dolor.',
-			read: false
-		},
-		{
-			date: new Date('2022-07-01'),
-			id: '2',
-			sender: 'Teacher Jane Doe',
-			title: 'sit amet consectetur.',
-			read: false
-		},
-		{
-			date: new Date('2022-05-01'),
-			id: '3',
-			sender: 'Teacher John Doe',
-			title: 'Modi quibusdam quidem.',
-			read: false
-		},
-		{
-			date: new Date('2021-01-24'),
-			id: '4',
-			sender: 'Teacher John Doe',
-			title: 'voluptas pariatur ab.',
-			read: false
-		}
-	];
-
+	let query = '';
+	let currentPage = 1;
+	let itemsPerPage = 0;
+	let totalItems = 0;
+	let notifications: Notification[] = [];
 	let selectedNotifications: Notification[] = [];
 	let indeterminate = false;
 	let checked = false;
@@ -61,16 +28,31 @@
 		indeterminate = false;
 	};
 
-	function bulkRead() {
-		notifications = notifications.map((notification) => {
-			notification.read = selectedNotifications.includes(notification) ? true : notification.read;
-			return notification;
+	async function bulkRead() {
+		notificationStore.markManyAsRead({
+			ids: selectedNotifications.map((notification) => notification.id)
 		});
 
-		notifications = orderBy(notifications, ['read', 'date'], ['asc', 'desc']);
+		loadNotifications({
+			page: currentPage,
+			query: ''
+		});
 
 		selectedNotifications = [];
 	}
+
+	async function loadNotifications(options: QueryManyOptions) {
+		const result = await notificationStore.load(options);
+
+		itemsPerPage = result.itemsPerPage;
+		totalItems = result.totalItems;
+		notifications = result.items;
+	}
+
+	$: loadNotifications({
+		page: currentPage,
+		query
+	});
 </script>
 
 <svelte:head>
@@ -89,7 +71,16 @@
 	</div>
 </div>
 
-<div class="table-responsive mt-3">
+<div class="mt-3 mt-sm-0 d-flex justify-content-end">
+	<Pagination
+		on:pageChange={({ detail }) => (currentPage = detail)}
+		{itemsPerPage}
+		{totalItems}
+		{currentPage}
+	/>
+</div>
+
+<div class="table-responsive">
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
@@ -150,10 +141,6 @@
 			{/each}
 		</tbody>
 	</table>
-</div>
-
-<div class="mb-3 mt-3 mt-sm-0 d-flex justify-content-end">
-	<Pagination itemsPerPage={4} totalItems={4} currentPage={1} />
 </div>
 
 <style>
