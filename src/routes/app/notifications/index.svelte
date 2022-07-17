@@ -107,8 +107,10 @@
 						/>
 					</div>
 				</div>
-			{:else}
+			{:else if totalItems > 0}
 				Showing {start} to {end} of {totalItems} results.
+			{:else}
+				Showing 0 results.
 			{/if}
 		</caption>
 		<thead>
@@ -167,6 +169,10 @@
 						{notification.title}
 					</td>
 					<td>{formatDate(notification.date)}</td>
+				</tr>
+			{:else}
+				<tr>
+					<td colspan="4"> No notifications found. </td>
 				</tr>
 			{/each}
 		</tbody>
