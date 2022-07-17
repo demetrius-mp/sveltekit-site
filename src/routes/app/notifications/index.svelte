@@ -4,6 +4,7 @@
 	import { formatDate } from '$lib/utils/formatter.utils';
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
 	import type { Notification, QueryManyOptions } from '$lib/repositories/NotificationRepository';
+	import FilterInput from './_components/FilterInput.svelte';
 
 	let loading = true;
 	let query = '';
@@ -74,7 +75,10 @@
 	</div>
 </div>
 
-<div class="mt-3 mt-sm-0 d-flex justify-content-end">
+<div class="mt-3 mt-sm-0 d-flex gap-3 justify-content-between">
+	<div class="flex-grow-1">
+		<FilterInput placeholder="Search" />
+	</div>
 	<Pagination
 		on:pageChange={({ detail }) => (currentPage = detail)}
 		{itemsPerPage}
