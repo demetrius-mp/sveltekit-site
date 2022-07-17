@@ -5,6 +5,7 @@
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
 	import type { Notification, QueryManyOptions } from '$lib/repositories/NotificationRepository';
 	import FilterInput from './_components/FilterInput.svelte';
+	import Modal from '$lib/components/Bootstrap/Modal/Modal.svelte';
 
 	let loading = true;
 	let query = '';
@@ -37,7 +38,7 @@
 
 		loadNotifications({
 			page: currentPage,
-			query: ''
+			query
 		});
 
 		selectedNotifications = [];
@@ -53,10 +54,15 @@
 		loading = false;
 	}
 
+	let currentNotification: Notification | null = null;
+
 	$: loadNotifications({
 		page: currentPage,
 		query
 	});
+
+	$: start = (currentPage - 1) * itemsPerPage + 1;
+	$: end = Math.min(start + itemsPerPage - 1, totalItems);
 </script>
 
 <svelte:head>
@@ -77,7 +83,7 @@
 
 <div class="mt-3 mt-sm-0 d-flex gap-3 justify-content-between">
 	<div class="flex-grow-1">
-		<FilterInput placeholder="Search" />
+		<FilterInput placeholder="Search" on:change={({ detail }) => (query = detail)} />
 	</div>
 	<Pagination
 		on:pageChange={({ detail }) => (currentPage = detail)}
@@ -88,7 +94,23 @@
 </div>
 
 <div class="table-responsive">
-	<table class="table table-striped table-bordered">
+	<table class="table table-striped table-bordered caption-top">
+		<caption>
+			{#if loading}
+				<div class="d-flex align-items-center" style:height="24px">
+					<div class="progress" style:width="250px">
+						<div
+							class="progress-bar progress-bar-striped progress-bar-animated"
+							role="progressbar"
+							style:width="100%"
+							style:background-color="#acacac"
+						/>
+					</div>
+				</div>
+			{:else}
+				Showing {start} to {end} of {totalItems} results.
+			{/if}
+		</caption>
 		<thead>
 			<tr>
 				<th style="width: 0;" scope="col">
@@ -134,14 +156,14 @@
 							class="form-check-input"
 						/>
 					</td>
-					<td role="button">
+					<td role="button" on:click={() => (currentNotification = notification)}>
 						{#if !notification.read}
 							<strong>{notification.sender}</strong>
 						{:else}
 							{notification.sender}
 						{/if}
 					</td>
-					<td role="button">
+					<td role="button" on:click={() => (currentNotification = notification)}>
 						{notification.title}
 					</td>
 					<td>{formatDate(notification.date)}</td>
@@ -150,6 +172,41 @@
 		</tbody>
 	</table>
 </div>
+
+<Modal open={Boolean(currentNotification)}>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="d-flex flex-row flex-wrap">
+					<div class="w-100">
+						<h5 class="modal-title">
+							{currentNotification?.sender}
+						</h5>
+					</div>
+					<div>
+						<small class="text-muted">{currentNotification?.title}</small>
+					</div>
+				</div>
+				<button
+					type="button"
+					class="btn-close"
+					on:click={() => (currentNotification = null)}
+					aria-label="Close"
+				/>
+			</div>
+			<div class="modal-body">
+				{currentNotification?.body}
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					on:click={() => (currentNotification = null)}
+					class="btn btn-secondary">Close</button
+				>
+			</div>
+		</div>
+	</div>
+</Modal>
 
 <style>
 	.row-selected {

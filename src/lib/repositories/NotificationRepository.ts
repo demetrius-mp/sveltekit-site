@@ -6,6 +6,7 @@ export interface Notification {
 	id: string;
 	sender: string;
 	title: string;
+	body: string;
 	date: Date;
 	read: boolean;
 }
@@ -18,6 +19,7 @@ const notifications: Notification[] = Array.from({ length: 25 })
 			id: uniqueId(),
 			sender: faker.name.findName(),
 			title: faker.lorem.sentence(),
+			body: faker.lorem.paragraphs(2),
 			read: Math.random() > 0.5
 		};
 	});
@@ -44,23 +46,24 @@ function createNotificationRepository(): NotificationRepository {
 
 			const orderedNotifications = orderBy(notifications, ['read', 'date'], ['asc', 'desc']);
 
-			const queriedNotifications = orderedNotifications
-				.filter((v) => {
-					if (query === undefined || query === '') return true;
+			const queriedNotifications = orderedNotifications.filter((v) => {
+				if (query === undefined || query === '') return true;
 
-					const lowerCaseQuery = query.toLowerCase();
+				const lowerCaseQuery = query.toLowerCase();
 
-					return (
-						v.sender.toLowerCase().includes(lowerCaseQuery) ||
-						v.title.toLowerCase().includes(lowerCaseQuery)
-					);
-				})
-				.slice(start, end);
+				return (
+					v.sender.toLowerCase().includes(lowerCaseQuery) ||
+					v.title.toLowerCase().includes(lowerCaseQuery)
+				);
+			});
+
+			const totalItems = queriedNotifications.length;
+			const items = queriedNotifications.slice(start, end);
 
 			return {
-				items: queriedNotifications,
-				itemsPerPage: ITEMS_PER_PAGE,
-				totalItems: notifications.length
+				items,
+				totalItems,
+				itemsPerPage: ITEMS_PER_PAGE
 			};
 		},
 		async markManyAsRead({ ids }) {
