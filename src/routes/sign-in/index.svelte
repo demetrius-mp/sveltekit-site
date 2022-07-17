@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import Alert from '$lib/components/Bootstrap/Alert/Alert.svelte';
 	import stall from '$lib/utils/stall.utils';
-
 	import { createForm } from 'svelte-forms-lib';
+
+	let alertIsOpen = false;
+	let alertMessage: string;
 
 	const { form, handleSubmit, isSubmitting, isModified } = createForm<{
 		username: string;
@@ -11,9 +15,16 @@
 			password: '',
 			username: ''
 		},
-		onSubmit: async (values) => {
+		onSubmit: async ({ password, username }) => {
 			await stall(300);
-			alert(JSON.stringify(values));
+			if (!(username === 'user.name' && password === 'password')) {
+				alertIsOpen = true;
+				alertMessage = 'Invalid credentials.';
+
+				return;
+			}
+
+			await goto('/app');
 		}
 	});
 </script>
@@ -28,6 +39,12 @@
 			<div class="mb-3">
 				<h2 class="fw-bold">Sign in to your account</h2>
 			</div>
+			<Alert dismissible class="alert-danger" bind:open={alertIsOpen}>
+				<div class="d-flex gap-2 align-items-center ">
+					<i class="bi bi-exclamation-triangle" />
+					{alertMessage}
+				</div>
+			</Alert>
 			<form on:submit={handleSubmit}>
 				<div class="mb-3">
 					<label for="username" class="form-label">Username</label>

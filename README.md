@@ -3,8 +3,8 @@
 ## To Do
 
 - [x] Make Sidebar and Offcanvas look the same.
-- [ ] Sign in page
-- [x] Notifications menu option in profile dropdown at the navbar
-- [ ] Notifications page
-- [ ] Deploy to vercel
-- [ ] Make public
+- [x] Sign in page
+- [x] Notifications option at the navbar
+- [x] Notifications page
+- [x] Deploy to vercel
+- [x] Make public

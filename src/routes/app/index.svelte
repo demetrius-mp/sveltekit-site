@@ -4,7 +4,7 @@
 	export const load: Load = () => {
 		return {
 			status: 302,
-			redirect: '/sign-in'
+			redirect: '/app/notifications'
 		};
 	};
 </script>
