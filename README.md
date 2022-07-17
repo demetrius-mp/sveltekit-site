@@ -8,3 +8,4 @@
 - [x] Notifications page
 - [x] Deploy to vercel
 - [x] Make public
+- [ ] Use SvelteKit endpoints to manage data
