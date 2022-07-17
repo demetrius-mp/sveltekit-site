@@ -1,4 +1,4 @@
-# svelte-grad-man
+# svelte-site
 
 ## To Do
 
@@ -8,4 +8,5 @@
 - [x] Notifications page
 - [x] Deploy to vercel
 - [x] Make public
+- [x] Change project name
 - [ ] Use SvelteKit endpoints to manage data
