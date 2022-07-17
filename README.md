@@ -1,4 +1,4 @@
-# svelte-site
+# sveltekit-site
 
 ## To Do
 
