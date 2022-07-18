@@ -1,11 +1,13 @@
 <script lang="ts">
 	import notificationStore from '$lib/stores/notifications.store';
 	import type { Notification, QueryManyOptions } from '$lib/repositories/NotificationRepository';
-	import DataTable from './_components/DataTable.svelte';
 	import { formatDate } from '$lib/utils/formatter.utils';
-	import Modal from '$lib/components/Bootstrap/Modal/Modal.svelte';
-	import DataTableBulkAction from './_components/DataTableBulkAction.svelte';
-	import SendMessageModal from './_components/SendMessageModal.svelte';
+	import {
+		DataTable,
+		DataTableBulkAction,
+		SendMessageModal,
+		NotificationDetailsModal
+	} from './_components';
 
 	let loading = true;
 	let query = '';
@@ -15,18 +17,20 @@
 	let notifications: Notification[] = [];
 	let selected: Notification[] = [];
 
-	async function bulkRead() {
-		notificationStore.markManyAsRead({
-			ids: selected.map((notification) => notification.id)
-		});
+	const bulkActions = {
+		read() {
+			notificationStore.markManyAsRead({
+				ids: selected.map((notification) => notification.id)
+			});
 
-		loadNotifications({
-			page: currentPage,
-			query
-		});
+			loadNotifications({
+				page: currentPage,
+				query
+			});
 
-		selected = [];
-	}
+			selected = [];
+		}
+	};
 
 	async function loadNotifications(options: QueryManyOptions) {
 		loading = true;
@@ -44,10 +48,6 @@
 	function openCurrentNotificationModal(notification: Notification) {
 		currentNotification = notification;
 		currentNotificationModalIsOpen = true;
-	}
-
-	function closeCurrentNotificationModal() {
-		currentNotificationModalIsOpen = false;
 	}
 
 	let sendMessageModalIsOpen = false;
@@ -92,7 +92,7 @@
 	itemPluralName="notifications"
 >
 	<svelte:fragment slot="bulk-actions">
-		<DataTableBulkAction on:click={bulkRead}>Mark as read</DataTableBulkAction>
+		<DataTableBulkAction on:click={bulkActions.read}>Mark as read</DataTableBulkAction>
 	</svelte:fragment>
 	<svelte:fragment slot="row" let:item>
 		<td role="button" on:click={() => openCurrentNotificationModal(item)}>
@@ -109,37 +109,9 @@
 	</svelte:fragment>
 </DataTable>
 
-<Modal bind:open={currentNotificationModalIsOpen}>
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div class="d-flex flex-row flex-wrap">
-					<div class="w-100">
-						<h5 class="modal-title">
-							{currentNotification?.sender}
-						</h5>
-					</div>
-					<div>
-						<small class="text-muted">{currentNotification?.title}</small>
-					</div>
-				</div>
-				<button
-					type="button"
-					class="btn-close"
-					on:click={closeCurrentNotificationModal}
-					aria-label="Close"
-				/>
-			</div>
-			<div class="modal-body">
-				{currentNotification?.body}
-			</div>
-			<div class="modal-footer">
-				<button type="button" on:click={closeCurrentNotificationModal} class="btn btn-secondary">
-					Close
-				</button>
-			</div>
-		</div>
-	</div>
-</Modal>
+<NotificationDetailsModal
+	bind:open={currentNotificationModalIsOpen}
+	notification={currentNotification}
+/>
 
 <SendMessageModal bind:open={sendMessageModalIsOpen} />
