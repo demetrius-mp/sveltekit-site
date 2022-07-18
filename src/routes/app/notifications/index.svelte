@@ -4,6 +4,7 @@
 	import DataTable from './_components/DataTable.svelte';
 	import { formatDate } from '$lib/utils/formatter.utils';
 	import Modal from '$lib/components/Bootstrap/Modal/Modal.svelte';
+	import DataTableBulkAction from './_components/DataTableBulkAction.svelte';
 
 	let loading = true;
 	let query = '';
@@ -82,11 +83,10 @@
 	itemKey={'id'}
 	columns={['Sender', 'Title', 'Date']}
 	itemPluralName="notifications"
-	bulkActionsCellMinWidth="120px"
 >
-	<div slot="bulk-actions" class="d-flex">
-		<button on:click={bulkRead} class="btn btn-sm py-0 btn-outline-primary"> Mark as read </button>
-	</div>
+	<svelte:fragment slot="bulk-actions">
+		<DataTableBulkAction on:click={bulkRead}>Mark as read</DataTableBulkAction>
+	</svelte:fragment>
 	<svelte:fragment slot="row" let:item>
 		<td role="button" on:click={() => openCurrentNotificationModal(item)}>
 			{#if !item.read}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DropdownToggle from '$lib/components/Bootstrap/Dropdown/DropdownToggle.svelte';
 	import Pagination from '$lib/components/Bootstrap/Pagination/Pagination.svelte';
 	import type { InputChangeEvent } from '$lib/utils/type.utils';
 	import FilterInput from './FilterInput.svelte';
@@ -25,9 +26,6 @@
 
 	// filtering
 	export let query: string;
-
-	// bulk actions
-	export let bulkActionsCellMinWidth: string;
 
 	// item selection
 	export let selected: T[];
@@ -57,11 +55,6 @@
 </div>
 
 <div class="position-relative table-responsive">
-	{#if selected.length > 0}
-		<div class="bulk-action-container">
-			<slot name="bulk-actions" />
-		</div>
-	{/if}
 	<table class="table table-striped table-bordered caption-top">
 		<caption>
 			{#if loading}
@@ -92,12 +85,19 @@
 						class="form-check-input"
 					/>
 				</th>
-				<th
-					style:--bulk-action-cell-width={bulkActionsCellMinWidth}
-					class="bulk-action-cell"
-					scope="col"
-				>
-					{firstColumn}
+				<th class="bulk-action-cell" scope="col">
+					{#if selected.length > 0}
+						<div class="dropdown">
+							<DropdownToggle>
+								<button class="btn btn-sm btn-primary dropdown-toggle py-0"> With selected </button>
+							</DropdownToggle>
+							<div class="dropdown-menu" aria-labelledby="Bulk actions">
+								<slot name="bulk-actions" />
+							</div>
+						</div>
+					{:else}
+						{firstColumn}
+					{/if}
 				</th>
 				{#each otherColumns as column (column)}
 					<th scope="col">{column}</th>
@@ -135,20 +135,12 @@
 	}
 
 	.bulk-action-cell {
-		min-width: var(--bulk-action-cell-width);
+		min-width: 133px;
 	}
 
 	.table-is-loading {
 		cursor: not-allowed;
 		opacity: 0.5;
-	}
-
-	.bulk-action-container {
-		min-width: var(--bulk-action-cell-width);
-		left: 40px;
-		top: 50px;
-		position: absolute;
-		background-color: white;
 	}
 
 	.progress-bar-width {
