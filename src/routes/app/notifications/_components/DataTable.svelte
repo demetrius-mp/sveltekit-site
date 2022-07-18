@@ -40,6 +40,11 @@
 		e.currentTarget.checked = checked;
 		indeterminate = false;
 	};
+
+	function handlePageChange(page: number) {
+		currentPage = page;
+		selected = [];
+	}
 </script>
 
 <div class="d-flex gap-3 justify-content-between">
@@ -47,7 +52,7 @@
 		<FilterInput placeholder="Search" on:change={({ detail }) => (query = detail)} />
 	</div>
 	<Pagination
-		on:pageChange={({ detail }) => (currentPage = detail)}
+		on:pageChange={({ detail }) => handlePageChange(detail)}
 		{itemsPerPage}
 		{totalItems}
 		{currentPage}
@@ -109,7 +114,7 @@
 			{#each items as item (item[itemKey])}
 				{@const itemIsSelected = selected.includes(item)}
 				<tr class:row-selected={itemIsSelected}>
-					<td class="position-relative" style="width: 0;">
+					<td class="position-relative">
 						{#if itemHasEmphasis(item)}
 							<div
 								style="width: 0.125rem;"
