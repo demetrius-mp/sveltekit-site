@@ -5,6 +5,7 @@
 	import { formatDate } from '$lib/utils/formatter.utils';
 	import Modal from '$lib/components/Bootstrap/Modal/Modal.svelte';
 	import DataTableBulkAction from './_components/DataTableBulkAction.svelte';
+	import SendMessageModal from './_components/SendMessageModal.svelte';
 
 	let loading = true;
 	let query = '';
@@ -49,6 +50,12 @@
 		currentNotificationModalIsOpen = false;
 	}
 
+	let sendMessageModalIsOpen = false;
+
+	function openSendMessageModal() {
+		sendMessageModalIsOpen = true;
+	}
+
 	$: loadNotifications({
 		page: currentPage,
 		query
@@ -67,7 +74,7 @@
 		</p>
 	</div>
 	<div class="mt-sm-4 mt-0">
-		<button class="btn btn-primary w-100"> Send message </button>
+		<button on:click={openSendMessageModal} class="btn btn-primary w-100"> Send message </button>
 	</div>
 </div>
 
@@ -127,10 +134,12 @@
 				{currentNotification?.body}
 			</div>
 			<div class="modal-footer">
-				<button type="button" on:click={closeCurrentNotificationModal} class="btn btn-secondary"
-					>Close</button
-				>
+				<button type="button" on:click={closeCurrentNotificationModal} class="btn btn-secondary">
+					Close
+				</button>
 			</div>
 		</div>
 	</div>
 </Modal>
+
+<SendMessageModal bind:open={sendMessageModalIsOpen} />
