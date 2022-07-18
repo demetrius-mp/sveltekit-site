@@ -9,6 +9,7 @@
 		NotificationDetailsModal
 	} from './_components';
 
+	// data table props
 	let loading = true;
 	let query = '';
 	let currentPage = 1;
@@ -17,21 +18,21 @@
 	let notifications: Notification[] = [];
 	let selected: Notification[] = [];
 
-	const bulkActions = {
-		read() {
-			notificationStore.markManyAsRead({
-				ids: selected.map((notification) => notification.id)
-			});
+	// data table bulk actions
+	function bulkRead() {
+		notificationStore.markManyAsRead({
+			ids: selected.map((notification) => notification.id)
+		});
 
-			loadNotifications({
-				page: currentPage,
-				query
-			});
+		loadNotifications({
+			page: currentPage,
+			query
+		});
 
-			selected = [];
-		}
-	};
+		selected = [];
+	}
 
+	// data loading function
 	async function loadNotifications(options: QueryManyOptions) {
 		loading = true;
 		const result = await notificationStore.load(options);
@@ -42,20 +43,23 @@
 		loading = false;
 	}
 
-	let currentNotificationModalIsOpen = false;
-	let currentNotification: Notification | null = null;
+	// notification details props
+	let notificationDetailsModalIsOpen = false;
+	let notificationDetails: Notification | null = null;
 
-	function openCurrentNotificationModal(notification: Notification) {
-		currentNotification = notification;
-		currentNotificationModalIsOpen = true;
+	function openNotificationDetailsModal(notification: Notification) {
+		notificationDetails = notification;
+		notificationDetailsModalIsOpen = true;
 	}
 
+	// send message props
 	let sendMessageModalIsOpen = false;
 
 	function openSendMessageModal() {
 		sendMessageModalIsOpen = true;
 	}
 
+	// load data whenever data table props change
 	$: loadNotifications({
 		page: currentPage,
 		query
@@ -92,17 +96,17 @@
 	itemPluralName="notifications"
 >
 	<svelte:fragment slot="bulk-actions">
-		<DataTableBulkAction on:click={bulkActions.read}>Mark as read</DataTableBulkAction>
+		<DataTableBulkAction on:click={bulkRead}>Mark as read</DataTableBulkAction>
 	</svelte:fragment>
 	<svelte:fragment slot="row" let:item>
-		<td role="button" on:click={() => openCurrentNotificationModal(item)}>
+		<td role="button" on:click={() => openNotificationDetailsModal(item)}>
 			{#if !item.read}
 				<strong>{item.sender}</strong>
 			{:else}
 				{item.sender}
 			{/if}
 		</td>
-		<td role="button" on:click={() => openCurrentNotificationModal(item)}>
+		<td role="button" on:click={() => openNotificationDetailsModal(item)}>
 			{item.title}
 		</td>
 		<td>{formatDate(item.date)}</td>
@@ -110,8 +114,8 @@
 </DataTable>
 
 <NotificationDetailsModal
-	bind:open={currentNotificationModalIsOpen}
-	notification={currentNotification}
+	bind:open={notificationDetailsModalIsOpen}
+	notification={notificationDetails}
 />
 
 <SendMessageModal bind:open={sendMessageModalIsOpen} />
